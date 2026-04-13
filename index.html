@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chemistry Master Notes</title>
+<style>
+:root {
+  /* Light Mode Palette */
+  --bg-primary: #f9f9f7;
+  --bg-card: #ffffff;
+  --bg-code: #f4f4f0;
+  --text-main: #1a1a1a;
+  --text-sub: #666;
+  --border-color: #e5e5e5;
+  --nav-btn-bg: #fff;
+  --nav-btn-border: #ccc;
+  --nav-active-bg: #EEEDFE;
+  --nav-active-text: #3C3489;
+  --accent-purple: #7F77DD;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Dark Mode Palette */
+    --bg-primary: #121212;
+    --bg-card: #1e1e1e;
+    --bg-code: #2d2d2d;
+    --text-main: #e0e0e0;
+    --text-sub: #a0a0a0;
+    --border-color: #333;
+    --nav-btn-bg: #2a2a2a;
+    --nav-btn-border: #444;
+    --nav-active-bg: #3C3489;
+    --nav-active-text: #ffffff;
+    --accent-purple: #9d94ff;
+  }
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { 
+  font-family: system-ui, -apple-system, sans-serif; 
+  font-size: 15px; 
+  color: var(--text-main); 
+  background: var(--bg-primary); 
+  padding: 1.5rem; 
+  line-height: 1.6;
+}
+
+h2 { font-size: 22px; font-weight: 600; margin-bottom: 4px; color: var(--text-main); }
+.sub { font-size: 13px; color: var(--text-sub); margin-bottom: 1.5rem; }
+
+.nav { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 1.5rem; }
+.nb { 
+  padding: 8px 16px; 
+  border: 1px solid var(--nav-btn-border); 
+  border-radius: 8px; 
+  background: var(--nav-btn-bg); 
+  color: var(--text-sub); 
+  cursor: pointer; 
+  font-size: 13px; 
+  transition: all .2s;
+}
+.nb:hover { background: var(--bg-code); }
+.nb.active { 
+  background: var(--nav-active-bg); 
+  color: var(--nav-active-text); 
+  border-color: var(--accent-purple); 
+  font-weight: 600; 
+}
+
+.sec { display: none; }
+.sec.active { display: block; }
+
+.card { 
+  background: var(--bg-card); 
+  border: 1px solid var(--border-color); 
+  border-radius: 12px; 
+  margin-bottom: 1rem; 
+  overflow: hidden; 
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.ch { display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.25rem; cursor: pointer; gap: 10px; }
+.ch:hover { background: rgba(127, 119, 221, 0.05); }
+.ctitle { font-size: 15px; font-weight: 600; flex: 1; }
+
+/* Badges */
+.badge { font-size: 11px; padding: 3px 10px; border-radius: 99px; white-space: nowrap; flex-shrink: 0; }
+.b-imp { background: #5a200c; color: #ffcdc0; }
+.b-calc { background: #243d0a; color: #d4f0b4; }
+.b-def { background: #0c355a; color: #c0e1ff; }
+.b-note { background: #4d2e06; color: #ffdca0; }
+.b-new { background: #26225a; color: #d0ccff; }
+
+.cb { display: none; padding: 1.25rem; border-top: 1px solid var(--border-color); background: var(--bg-card); }
+.cb.open { display: block; }
+
+.label { 
+  font-size: 11px; font-weight: 700; color: var(--accent-purple); 
+  text-transform: uppercase; letter-spacing: .05em; margin: 16px 0 6px; 
+}
+.label:first-child { margin-top: 0; }
+
+p.note { font-size: 14px; margin-bottom: 8px; color: var(--text-main); }
+.box { 
+  background: var(--bg-code); 
+  border-left: 4px solid var(--accent-purple); 
+  padding: 12px; 
+  border-radius: 0 8px 8px 0; 
+  font-family: monospace; 
+  font-size: 13px; 
+  margin: 10px 0; 
+  line-height: 1.7; 
+  white-space: pre-wrap;
+  color: var(--text-main);
+}
+
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 10px 0; }
+.mini { background: var(--bg-code); border-radius: 8px; padding: 12px; border: 1px solid var(--border-color); }
+.mini .mh { font-size: 12px; font-weight: 700; color: var(--text-sub); margin-bottom: 6px; }
+.mini .mv { font-size: 13px; line-height: 1.6; }
+
+.table-wrapper { overflow-x: auto; margin: 10px 0; border-radius: 8px; border: 1px solid var(--border-color); }
+table.t { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 450px; }
+table.t th { text-align: left; padding: 10px; background: var(--bg-code); font-weight: 600; border-bottom: 1px solid var(--border-color); }
+table.t td { padding: 10px; border-bottom: 1px solid var(--border-color); border-right: 1px solid var(--border-color); vertical-align: top; }
+table.t td:last-child { border-right: none; }
+
+.tip { background: rgba(22, 101, 52, 0.1); border-radius: 8px; padding: 12px; font-size: 13px; color: #4ade80; margin: 10px 0; border: 1px solid rgba(74, 222, 128, 0.2); }
+.warn { background: rgba(120, 53, 15, 0.1); border-radius: 8px; padding: 12px; font-size: 13px; color: #fbbf24; margin: 10px 0; border: 1px solid rgba(251, 191, 36, 0.2); }
+.newinfo { background: rgba(60, 52, 137, 0.1); border-radius: 8px; padding: 12px; font-size: 13px; color: var(--accent-purple); margin: 10px 0; border-left: 4px solid var(--accent-purple); }
+ul.li { padding-left: 1.5rem; font-size: 14px; line-height: 2; margin-bottom: 10px; }
+
+@media(max-width: 650px) {
+  body { padding: 1rem; }
+  .grid2 { grid-template-columns: 1fr; }
+  .nb { padding: 6px 12px; font-size: 12px; }
+  h2 { font-size: 20px; }
+}
+</style>
+</head>
+<body>
+
+<h2>Chemistry — Master Notes</h2>
+<p class="sub">All content merged from three sets of class notes (your notes + PM Sir + TKM Sir). New additions marked with <span style="background:#EEEDFE;color:#3C3489;padding:1px 7px;border-radius:99px;font-size:11px">new</span>. Click any card to expand.</p>
+
+<div class="nav">
+  <button class="nb active" onclick="show('coord')">Coordination & Werner</button>
+  <button class="nb" onclick="show('cft')">CFT & Splitting</button>
+  <button class="nb" onclick="show('cfse')">CFSE Calculations</button>
+  <button class="nb" onclick="show('spinel')">Spinel & Applications</button>
+  <button class="nb" onclick="show('colour')">Colour & Spectra</button>
+  <button class="nb" onclick="show('mag')">Magnetic Moments</button>
+  <button class="nb" onclick="show('redox')">Redox Titrations</button>
+  <button class="nb" onclick="show('complex')">Complexometric</button>
+  <button class="nb" onclick="show('grav')">Gravimetry</button>
+</div>
+
+<!-- ==================== COORDINATION ==================== -->
+<div class="sec active" id="coord">
+
+  <div class="card">
+    <div class="ch" onclick="tog(this)"><span class="ctitle">Werner's theory — primary vs secondary valency</span><span class="badge b-imp">core concept</span></div>
+    <div class="cb">
+      <div class="label">Three types of bonding</div>
+      <ul class="li">
+        <li><b>Ionic</b> — electrostatic interaction between anion &amp; cation; complete separation of electrons; complete transfer</li>
+        <li><b>Covalent</b> — not a transfer; 2 electrons shared, 1 by each atom</li>
+        <li><b>Coordinate</b> — one atom donates, not completely; donation of lone pair</li>
+      </ul>
+      <div class="label">K[Au(CN)₂] — worked example</div>
+      <p class="note">Potassium aurocyanate K[Au(CN)₂] is used in gold-plating as an electrolyte. Here Au → +1 (primary valency). This is a coordination compound where CN⁻ are ligands sharing electrons with Au⁺.</p>
+      <div class="label">Primary vs secondary valency — Werner's postulates</div>
+      <div class="grid2">
+        <div class="mini"><div class="mh">[Co(NH₃)₆]Cl₃</div><div class="mv">Primary valency = 3 (Co³⁺ charge, satisfied by 3 Cl⁻ outside)<br>Secondary valency = 6 (6 NH₃ inside, sharing electrons)<br>With AgNO₃ → 3 AgCl (3 free Cl⁻ outside)<br>Conductivity HIGH — 4 total ions present</div></div>
+        <div class="mini"><div class="mh">[Co(NH₃)₄Cl₂]Cl</div><div class="mv">Primary valency = 3 (only 1 free Cl⁻ outside)<br>Secondary valency = 6 (4 NH₃ + 2 Cl inside)<br>With AgNO₃ → only 1 AgCl<br>Inner Cl acts as ligand AND charge balance simultaneously</div></div>
+      </div>
+      <div class="tip">Conductivity is highest in [Co(NH₃)₆]Cl₃ (4 ions) because more free ions outside the coordination sphere means higher conductivity. [Co(NH₃)₄Cl₂]Cl has only 2 free ions.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ch" onclick="tog(this)"><span class="ctitle">Werner's geometric proof — why octahedral?<span class="src">PM Sir</span></span><span class="badge b-imp">important</span></div>
+    <div class="cb">
+      <p class="note">For MA₄B₂ type compounds, Werner tried to find how many isomers of [Co(NH₃)₄Cl₂] exist. He considered three possible geometries:</p>
+      <table class="t">
+        <tr><th>Geometry</th><th>Predicted isomers for MA₄B₂</th><th>Result</th></tr>
+        <tr><td>Planar (metal in centre)</td><td>3 arrangements possible</td><td>Too many</td></tr>
+        <tr><td>Trigonal prism</td><td>3 arrangements</td><td>Too many</td></tr>
+        <tr><td>Octahedral</td><td>Only 2 (cis and trans)</td><td>✓ Matches experiment</td></tr>
+      </table>
+      <p class="note">Werner was able to isolate only 2 isomers chemically, so he concluded the structure must be octahedral. This was the decisive experimental proof.</p>
+      <div class="tip">Mohn salt, alum, and similar compounds (non-coordination compounds) can take many forms. But coordination compounds with only 2 isomers → octahedral structure is the only explanation.</div>
+      <div class="label">Second compound type: MA₃B₃</div>
+      <p class="note">For [Co(NH₃)₃Cl₃] type: octahedral gives exactly 2 isomers (fac and mer). This further confirmed the octahedral geometry.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ch" onclick="tog(this)"><span class="ctitle">Transition elements — why they form coordination compounds<span class="src">PM Sir</span></span><span class="badge b-def">concept</span></div>
+    <div class="cb">
+      <div class="label">Key properties of transition elements</div>
+      <ul class="li">
+        <li>Multiple valency (variable oxidation states)</li>
+        <li>Colourful salts and solutions</li>
+        <li>Have vacant d-orbitals that can accept lone pairs from ligands</li>
+      </ul>
+      <div class="label">3d series: Sc → Zn</div>
+      <div class="box">₂₁Sc: 1s² 2s² 2p⁶ 3s² 3p⁶ 3d¹ 4s² → Sc³⁺: 3p⁶ (3d⁰)
+₂₂Ti: 1s² 2s² 2p⁶ 3s² 3p⁶ 3d² 4s² → Ti²⁺: 3d²</div>
+      <div class="label">Why coordination compounds form — key insight</div>
+      <p class="note">In a free Co²⁺ ion, all 5 d-orbitals are degenerate (same energy). All 7 electrons have same energy — only possible if no ligands have come. When a ligand approaches along an axis, it repels electrons in orbitals along that axis more than others → d-orbital splitting → basis of CFT.</p>
+      <div class="newinfo">PM Sir's insight: the 4th electron in t₂g in a complex needs energy to either pair (pairing energy favorable) or go to the higher eg state. Which is cheaper decides high spin vs low spin. This is the decision point.</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ==================== CFT ==================== -->
+<div class="sec" id="cft">
+
+  <div class="card">
+    <div class="ch" onclick="tog(this)"><span class="ctitle">d-orbital shapes and the basis of CFT<span class="src">PM Sir</span></span><span class="badge b-def">foundation</span></div>
+    <div class="cb">
+      <p class="note">The 5 d-orbitals have distinct spatial orientations. In a free ion (no ligands), all 5 are degenerate. When ligands approach, orbitals pointing directly at ligands experience more repulsion.</p>
+      <table class="t">
+        <tr><th>Orbital</th><th>Points along</th><th>In octahedral field</th></tr>
+        <tr><td>dz²</td><td>z-axis (lobes on z)</td><td>eₘ set — high energy (+0.6Δₒ)</td></tr>
+        <tr><td>dx²-y²</td><td>x and y axes</td><td>eₘ set — high energy (+0.6Δₒ)</td></tr>
+        <tr><td>dxy</td><td>between x and y axes</td><td>t₂g set — low energy (−0.4Δₒ)</td></tr>
+        <tr><td>dyz</td><td>between y and z axes</td><td>t₂g set — low energy (−0.4Δₒ)</td></tr>
+        <tr><td>dxz</td><td>between x and z axes</td><td>t₂g set — low energy (−0.4Δₒ)</td></tr>
+      </table>
+      <div class="tip">In octahedral complexes, ligands approach along ±x, ±y, ±z axes. The eₘ orbitals (dz², dx²-y²) point directly at ligands → maximum repulsion → higher energy. The t₂g orbitals point between ligands → less repulsion → lower energy.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ch" onclick="tog(this)"><span class="ctitle">Octahedral splitting — energy levels, Δₒ and 10Dq</span><span class="badge b-calc">core</span></div>
+    <div class="cb">
+      <div class="box">Octahedral field splitting:
+eₘ  (dz², dx²-y²) → +0.6Δₒ = +6Dq  (higher energy)
+t₂g (dxy, dyz, dxz) → −0.4Δₒ = −4Dq (lower energy)
+Total gap = Δₒ = 10Dq
+
+Note: Dq is an older notation, 10Dq = Δₒ = the energy gap</div>
+      <div class="label">Tetrahedral splitting — inverted</div>
+      <div class="box">Tetrahedral field (ligands approach between axes, not along them):
+t₂ (dxy, dyz, dxz) → higher energy (+4Dq_tet)
+e  (dz², dx²-y²) → lower energy (−6Dq_tet)
+
+Key relationship:
+(10Dq)tet = (4/9)(10Dq)oct = Δt = (4/9)Δₒ</div>
+      <div class="label">Square planar splitting — from PM Sir notes</div>
+      <div class="box">Splitting order (bottom to top):
+dz²  (lowest)
+dyz, dxz
+dxy
+dx²-y² (highest — points directly at 4 ligands in xy plane)</div>
+      <div class="tip">Square planar has a much larger energy gap for dx²-y² than octahedral, because removing the two z-axis ligands pushes the xy-plane ligands closer in → dx²-y² shoots up in energy.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ch" onclick="tog(this)"><span class="ctitle">Factors affecting Δₒ (CFSE magnitude)<span class="src">PM Sir</span></span><span class="badge b-imp">important</span></div>
+    <div class="cb">
+      <div class="label">1. Strength of ligand (spectrochemical series)</div>
+      <div class="box">Weak field:     Cl⁻, F⁻, Br⁻, I⁻, water → small Δₒ → high spin
+Moderate field: NH₃ → intermediate
+Strong field:   CO, CN⁻ → large Δₒ → low spin</div>
+      <div class="label">2. Charge of metal ion/cation</div>
+      <p class="note">Higher charge → metal pulls ligands closer → stronger ligand field → larger Δₒ. Example from PM Sir notes: [V(H₂O)₆]³⁺ &gt; [V(H₂O)₆]²⁺ in CFSE because 3+ pulls water ligands closer than 2+.</p>
+      <div class="label">3. Nature of metal ion — period effect</div>
+      <div class="box">Splitting increases going down a group (same charge):
+3d &lt; 4d &lt; 5d
+Example: Co³⁺ &lt; Rh³⁺ &lt; Ir³⁺
+Heavier metals have more diffuse d-orbitals → stronger interaction with ligands</div>
+      <div class="label">Size factor vs CFSE factor — Ni²⁺ geometry choice</div>
+      <p class="note">According to CFSE alone, Ni²⁺ should always prefer octahedral. But with Cl⁻ (large, weak-field ligand), the <b>size factor dominates</b> — Ni²⁺ chooses the geometry that fits the smaller Cl⁻ ligand, which is tetrahedral. With CN⁻ (CFSE dominates) → square planar.</p>
+      <table class="t">
+        <tr><th>Ligand</th><th>Geometry of Ni²⁺ complex</th><th>Reason</th></tr>
+        <tr><td>Cl⁻</td><td>Tetrahedral [NiCl₄]²⁻</td><td>Size factor dominates CFSE</td></tr>
+        <tr><td>NH₃</td><td>Octahedral [Ni(NH₃)₆]²⁺</td><td>CFSE favours oct, NH₃ moderate size</td></tr>
+        <tr><td>CN⁻</td><td>Square planar [Ni(CN)₄]²⁻</td><td>Strong field → CFSE dominates → sq. planar</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ch" onclick="tog(this)"><span class="ctitle">High spin vs low spin — the 4th electron decision<span class="src">PM Sir</span></span><span class="badge b-imp">key concept</span></div>
+    <div class="cb">
+      <p class="note">For d⁴ and above, the 4th electron has a choice: pair in t₂g (costs pairing energy P) or go to eg (costs Δₒ). Which is cheaper determines spin state.</p>
+      <div class="box">If Δₒ &gt; P  →  pairing is cheaper  → LOW SPIN (strong field)
+If Δₒ &lt; P  →  going to eg is cheaper → HIGH SPIN (weak field)
+
+For tetrahedral: Δt = (4/9)Δₒ, so Δt &lt;&lt; P almost always → tetrahedral complexes are almost always high spin</div>
+      <div class="tip">This is why tetrahedral complexes are rarely low spin — the splitting is just too small to overcome pairing energy.</div>
+      <div class="label">High spin configurations (your notes use these often)</div>
+      <div class="box">d⁵ high spin: t₂g³ eg² (all singly occupied — 5 unpaired)
+d⁶ high spin: t₂g⁴ eg² (4 unpaired)
+d⁷ high spin: t₂g⁵ eg² (3 unpaired)</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ==================== CFSE ==================== -->
+<div class="sec" id="cfse">
+
+  <div class="card">
+    <div class="ch" onclick="tog(this)"><span class="ctitle">CFSE formula and general method</span><span class="badge b-calc">method</span></div>
+    <div class="cb">
+      <div class="box">CFSE = (n_t₂g × −4Dq) + (n_eg × +6Dq) + extra pairing energy
+
+Or in Δₒ units:
+CFSE = (n_t₂g × −0.4Δₒ) + (n_eg × +0.6Δₒ) + ΔP
+
+Where ΔP = (extra forced pairs vs free ion) × P</div>
+      <div class="warn">Only add pairing energy for pairs that are EXTRA compared to the free ion. If the free ion already has 2 pairs (like d⁶ high spin → 1 pair; d⁶ low spin → 3 pairs → 2 extra pairs), then ΔP = 2P.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ch" onclick="tog(this)"><span class="ctitle">CFSE for Mn²⁺ low spin octahedral</span><span class="badge b-calc">worked</span></div>
+    <div class="cb">
+      <div class="box">Mn²⁺ → d⁵
+Low spin: t₂g⁵ eg⁰
+CFSE = 5×(−4Dq) + 0×(+6Dq) = −20Dq = −2.0Δₒ
++ pairing energy correction: +2P
+(high spin d⁵ has zero pairs; low spin has 2 extra pairs → add 2P)
+Final CFSE = −20Dq + 2P</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ch" onclick="tog(this)"><span class="ctitle">CFSE for Co²⁺ (d⁷) — high spin and low spin</span><span class="badge b-calc">worked</span></div>
+    <div class="cb">
+      <div class="label">High spin Co²⁺ (from PM Sir notes)</div>
+      <div class="box">d⁷ high spin: t₂g⁵ eg²
+CFSE = 5×(−4) + 2×(+6) = −20 + 12 = −8Dq (no pairing correction needed — 
+HS d⁷ already has 2 paired electrons in t₂g, same as free ion)</div>
+      <div class="label">Low spin Co²⁺</div>
+      <div class="box">d⁷ low spin: t₂g⁶ eg¹ → 3 pairs in t₂g
+CFSE = 6×(−4) + 1×(+6) = −24 + 6 = −18Dq
+Co²⁺ free ion (HS) already has 2 paired electrons.
+Low spin has 3 pairs → 1 extra pair forced
+Correction: +1P (not +2P — only 1 extra pair)
+Final CFSE = −18Dq + P</div>
+      <div class="warn">PM Sir's note: Co²⁺ already freely has 2 pairing electrons. Low spin t₂g⁶ has 3 pairs. Extra pairs = 3−2 = 1. So add only 1P, not 2P.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ch" onclick="tog(this)"><span class="ctitle">CFSE for Ni²⁺ (d⁸) — octahedral vs tetrahedral</span><span class="badge b-calc">worked</span></div>
+    <div class="cb">
+      <div class="label">Octahedral Ni²⁺</div>
+      <div class="box">d⁸ octahedral: t₂g⁶ eg²
+CFSE = 6×(−4Dq) + 2×(+6Dq) = −24 + 12 = −12Dq_oct</div>
+      <div class="label">Tetrahedral Ni²⁺ (inverted splitting: e and t₂)</div>
+      <div class="box">d⁸ tetrahedral: e⁴ t₂⁴  (lower set e filled first in tet)
+CFSE = 4×(−6Dq_tet) + 4×(+4Dq_tet)
+     = −24Dq_tet + 16Dq_tet = −8Dq_tet
+Using (Dq_tet) = (4/9)(Dq_oct):
+     = −8 × (4/9)Dq_oct = −(32/9)Dq_oct ≈ −4Dq_oct (approximate)
+
+So: CFSE(oct) = −12Dq  vs  CFSE(tet) ≈ −4Dq
+Ni²⁺ gains 3× more stabilisation in octahedral → prefers octahedral!</div>
+      <div class="tip">This is the CFSE preference argument for spinel site preference. Ni²⁺ has a strong site preference for octahedral holes — CFSE difference = 12−4 = 8Dq_oct per Ni²⁺.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ch" onclick="tog(this)"><span class="ctitle">CFSE for Fe³⁺ (d⁵) — why it has no preference</span><span class="badge b-calc">worked</span></div>
+    <div class="cb">
+      <div class="box">Fe³⁺ → d⁵ high spin (O²⁻ is weak field ligand in oxides)
+Octahedral: t₂g³ eg²
+CFSE = 3×(−4) + 2×(+6) = −12 + 12 = 0 Dq
+
+Tetrahedral: e² t₂³
+CFSE = 2×(−6) + 3×(+4) = −12 + 12 = 0 Dq
+
+Fe³⁺ CFSE = 0 in BOTH sites → NO site preference
+→ Fe³⁺ will not decide the nature of a spinel</div>
+      <div class="tip">This is why Fe²⁺ (not Fe³⁺) decides whether Fe₃O₄ is normal or inverse spinel — Fe³⁺ has zero CFSE preference and is indifferent to which site it occupies.</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ==================== SPINEL ==================== -->
+<div class="sec" id="spinel">
+
+  <div class="card">
+    <div class="ch" onclick="tog(this)"><span class="ctitle">Spinel structure AB₂O₄ — crystal structure basics<span class="src">PM Sir</span></span><span class="badge b-imp">important</span></div>
+    <div class="cb">
+      <p class="note">Spinel formula: AB₂O₄, where A is A²⁺ cation and B is B³⁺ cation. O²⁻ is a weak-field ligand → all complexes are high spin.</p>
+      <div class="label">Crystal structure</div>
+      <ul class="li">
+        <li>Oxide ions form FCC lattice (CCP — cubic close packing)</li>
+        <li>For each unit cell (containing 4 O²⁻ ions): <b>8 tetrahedral holes</b> and <b>4 octahedral holes</b> available</li>
+        <li>eg level → e⁻ repulsion (size increases with eg filling)</li>
+        <li>t₂g level → no e⁻ repulsion (orbitals point away from ligands)</li>
+      </ul>
+      <div class="grid2">
+        <div class="mini"><div class="mh">Normal spinel</div><div class="mv">A²⁺ → tetrahedral holes<br>2 B³⁺ → octahedral holes<br>e.g. MnFe₂O₄ (Mn²⁺ in tet, 2Fe³⁺ in oct)</div></div>
+        <div class="mini"><div class="mh">Inverse spinel</div><div class="mv">A²⁺ → octahedral holes<br>1 B³⁺ → tetrahedral holes<br>1 B³⁺ → octahedral holes<br>e.g. Fe₃O₄</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ch" onclick="tog(this)"><span class="ctitle">Three spinel examples — full reasoning<span class="src">PM Sir + your notes</span></span><span class="badge b-imp">exam favourite</span></div>
+    <div class="cb">
+      <div class="label">1. Mn₃O₄ = Mn²⁺Mn₂³⁺O₄ → Normal spinel</div>
+      <div class="box">Mn³⁺ → d⁴ system
+Octahedral CFSE: t₂g³ eg¹ → 3×(−4) + 1×(+6) = −6Dq_oct
+Tetrahedral: e² t₂² → 2×(−6) + 2×(+4) = −4Dq_tet ≈ −1.8Dq_oct
+Octahedral CFSE is more → Mn³⁺ prefers oct → Normal spinel</div>
+      <div class="label">2. Fe₃O₄ = Fe²⁺Fe₂³⁺O₄ → Inverse spinel</div>
+      <div class="box">Fe³⁺ (d⁵ HS): CFSE = 0 in both oct and tet → NO preference, Fe³⁺ won't decide
+Fe²⁺ (d⁶ HS): t₂g⁴ eg² → CFSE in oct = 4×(−4)+2×(6) = −4Dq_oct
+                         CFSE in tet ≈ −(4/9)×same ≈ smaller
+Fe²⁺ prefers octahedral → takes oct holes → Fe³⁺ forced to split (one tet, one oct)
+→ INVERSE SPINEL</div>
+      <div class="label">3. Co₃O₄ = Co²⁺Co₂³⁺O₄ → Normal spinel (exception!)</div>
+      <div class="box">By CFSE calculation alone, Co₃O₄ should be inverse spinel.
+BUT: Co³⁺ (d⁶) almost ALWAYS forms low-spin complexes → CFSE = −18Dq_oct (very large)
+Co³⁺ only forms high spin in TWO exceptions:
+  [CoF₆]³⁻ and [CoF₃(H₂O)₃]  (F⁻ is the weakest ligand)
+Co³⁺ has a very strong preference for octahedral (low spin) → takes all oct holes
+→ NORMAL SPINEL (experiment confirms)</div>
+      <div class="tip">Remember Co₃O₄ as the exception: calculation says inverse, reality is normal, because Co³⁺ is almost always low spin with its exceptionally large CFSE.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ch" onclick="tog(this)"><span class="ctitle">NiFe₂O₄ — inverse spinel CFSE proof</span><span class="badge b-calc">worked</span></div>
+    <div class="cb">
+      <div class="box">NiFe₂O₄: Ni²⁺ and 2Fe³⁺
+
+Fe³⁺ (d⁵): CFSE = 0 everywhere → no preference
+
+Ni²⁺ (d⁸):
+  Oct CFSE = −12Dq_oct
+  Tet CFSE = −8Dq_tet ≈ −4Dq_oct
+  Difference = 8Dq_oct (strong preference for oct)
+
+Ni²⁺ goes to octahedral holes.
+1 Fe³⁺ → tetrahedral, 1 Fe³⁺ → octahedral
+→ INVERSE SPINEL (confirmed)</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ch" onclick="tog(this)"><span class="ctitle">Ionic radius trend across 3d series — CFT application<span class="src">PM Sir</span></span><span class="badge b-def">application</span></div>
+    <div class="cb">
+      <p class="note">PM Sir drew the ionic radius vs 3d metal ion graph (aqua complexes). The curve is a double-humped shape, not a smooth decrease. This is directly due to CFT:</p>
+      <ul class="li">
+        <li>Filling t₂g orbitals (which point away from ligands) → does NOT cause extra repulsion → metal-ligand bond can shorten → radius decreases</li>
+        <li>Filling eg orbitals (which point at ligands) → causes direct repulsion → pushes ligands away → effective radius increases at Ca and Zn-like positions</li>
+        <li>The double hump appears at d⁵ (Mn²⁺) where both sets are half-filled symmetrically, and at d¹⁰ (Zn²⁺) where no CFSE exists</li>
+      </ul>
+      <div class="box">3d series radii trend for M²⁺ aqua complexes:
+Ti²⁺ → V²⁺ → Cr²⁺ → Mn²⁺ → Fe²⁺ → Co²⁺ → Ni²⁺ → Cu²⁺ → Zn²⁺
+(double-humped decrease, not smooth)
+eg filling → e⁻ repulsion → size increases
+t₂g filling → no e⁻ repulsion → size decreases (CFSE stabilisation)</div>
+      <div class="tip">ZnO → initially white colour, turns yellow on heating because: ZnO → Zn²⁺ + O²⁻, but after heating O²⁻ count &lt; Zn²⁺ (metal excess defect). Liberated electrons create colour by electronic transitions.</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ==================== COLOUR ==================== -->
+<div class="sec" id="colour">
+
+  <div class="card">
+    <div class="ch" onclick="tog(this)"><span class="ctitle">CoSO₄ in water and [CoCl₄]²⁻ — colour contrast<span class="src">PM Sir</span></span><span class="badge b-imp">key example</span></div>
+    <div class="cb">
+      <div class="label">[Co(H₂O)₆]SO₄ — pale pink</div>
+      <div class="box">CoSO₄ dissolved in water → [Co(H₂O)₆]SO₄ → pale pink colour
+Co²⁺ → d⁷ system → octahedral (6 water ligands)
+Configuration: t₂g⁵ eg²
+Electronic transition: t₂g → eg (uses visible light to cross energy gap)
+Energy gap is sized so that COMPLEMENTARY colour is pink → observed as pale pink
+
+Why PALE? Octahedral → centre of symmetry → d-p mixing NOT allowed (Laporte)
+→ vibronic coupling only (vibration briefly destroys symmetry) → WEAK intensity</div>
+      <div class="label">[CoCl₄]²⁻ — dark blue (intense!)</div>
+      <div class="box">Co²⁺ → d⁷ → tetrahedral with 4 Cl⁻
+Configuration: e⁴ t₂³ (inverted tet splitting)
+Tetrahedral → NO centre of symmetry → d-p orbitals fully mixed
+→ Laporte selection rule RELAXED
+→ p→p, d→p, p→d transitions all occur (Δl = ±1 allowed)
+Energy gap → complementary colour is blue → DARK BLUE (intense)
+
+Why DARK? Laporte relaxed → allowed transitions → high intensity</div>
+      <div class="tip">Pale vs dark depends on INTENSITY = number of photons absorbed = number of electronic transitions. Tetrahedral complexes are more intensely coloured because Laporte rule is relaxed.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ch" onclick="tog(this)"><span class="ctitle">Selection rules for d-d transitions</span><span class="badge b-imp">must know</span></div>
+    <div class="cb">
+      <div class="label">Two selection rules</div>
+      <div class="box">1. Spin selection rule: ΔS = 0 (spin must be conserved)
+   → d-d transitions obey this (electrons don't flip spin)
+
+2. Laporte selection rule: Δl = ±1 
+   → d-d transitions DISOBEY this (d→d means Δl=0, forbidden)
+   → but transitions still appear WEAKLY because:
+      a) Vibronic coupling: molecular vibrations temporarily remove
+         centre of symmetry → transition allowed momentarily
+      b) In tetrahedral: no centre of symmetry → d-p mixing → 
+         transitions gain some p-character → effectively allowed</div>
+      <div class="label">Consequence: octahedral vs tetrahedral intensity</div>
+      <table class="t">
+        <tr><th>Complex type</th><th>Centre of symmetry?</th><th>Laporte status</th><th>Colour intensity</th></tr>
+        <tr><td>Octahedral (e.g. [Co(H₂O)₆]²⁺)</td><td>Yes</td><td>Forbidden (vibronic only)</td><td>Pale, weak</td></tr>
+        <tr><td>Tetrahedral (e.g. [CoCl₄]²⁻)</td><td>No</td><td>Relaxed (d-p mixing)</td><td>Intense, dark</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ch" onclick="tog(this)"><span class="ctitle">Charge transfer spectra — KMnO₄, K₂Cr₂O₇, FeCl₃</span><span class="badge b-def">concept</span></div>
+    <div class="cb">
+      <p class="note">Charge transfer transitions are Laporte-allowed (ligand → metal or metal → ligand, different orbital types) → very intense colours.</p>
+      <table class="t">
+        <tr><th>Compound</th><th>Metal state</th><th>Colour</th><th>Transfer</th></tr>
+        <tr><td>KMnO₄</td><td>Mn → +7</td><td>Purple</td><td>O²⁻ → Mn⁷⁺ (LMCT), low energy needed</td></tr>
+        <tr><td>K₂Cr₂O₇</td><td>Cr → +6</td><td>Orange</td><td>O²⁻ → Cr⁶⁺ (LMCT)</td></tr>
+        <tr><td>FeCl₃</td><td>Fe → +3</td><td>Yellow</td><td>Cl⁻ → Fe³⁺ (LMCT)</td></tr>
+        <tr><td>NaCl</td><td>Na → +1</td><td>Colourless</td><td>Cl→Na needs UV (too high energy), not visible</td></tr>
+      </table>
+      <div class="tip">High metal oxidation states (Mn⁷⁺, Cr⁶⁺) need less energy for the charge transfer → falls in visible range → strong colour. Low charge metals need UV-level energy → colourless in visible range.</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ==================== MAGNETIC ==================== -->
+<div class="sec" id="mag">
+
+  <div class="card">
+    <div class="ch" onclick="tog(this)"><span class="ctitle">Spin-only vs full magnetic moment — two formulas<span class="src">PM Sir</span></span><span class="badge b-calc">formulas</span></div>
+    <div class="cb">
+      <div class="box">Spin-only (most used):
+μₛ = √[n(n+2)] BM     n = number of unpaired electrons
+
+Full formula (includes orbital contribution):
+μₛ₊ₗ = √[L(L+1) + 4S(S+1)] BM
+      = √[orbital part + spin part]
+      
+Applicable ONLY when all d-orbitals are in degenerate state
+→ only in FREE ION state (no ligand field)
+Examples: Ni²⁺, Fe²⁺, Cu²⁺ as free ions</div>
+      <div class="label">Worked example: high spin Mn²⁺ octahedral (PM Sir)</div>
+      <div class="box">Mn²⁺ → d⁵ high spin: all 5 electrons unpaired
+μₛ = √[5×(5+2)] = √35 ≈ 5.92 BM</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ch" onclick="tog(this)"><span class="ctitle">[NiCl₄]²⁻ vs [Ni(CN)₄]²⁻ — magnetic comparison<span class="src">PM Sir</span></span><span class="badge b-imp">classic example</span></div>
+    <div class="cb">
+      <div class="grid2">
+        <div class="mini"><div class="mh">[NiCl₄]²⁻ — tetrahedral</div><div class="mv">Ni²⁺ (d⁸) + Cl⁻ (weak field)<br>Cl⁻ large → size factor → tetrahedral<br>d⁸ tet: e⁴ t₂⁴<br>2 unpaired electrons<br><b>PARAMAGNETIC</b><br>μₛ = √[2×4] = √8 = 2.83 BM</div></div>
+        <div class="mini"><div class="mh">[Ni(CN)₄]²⁻ — square planar</div><div class="mv">Ni²⁺ (d⁸) + CN⁻ (strong field)<br>Large CFSE → square planar geometry<br>All 8 electrons paired in lower 4 orbitals<br>0 unpaired electrons<br><b>DIAMAGNETIC</b><br>μₛ = 0 BM</div></div>
+      </div>
+      <div class="tip">This pair is a classic exam question. Same metal ion (Ni²⁺), different ligands → completely different geometry AND magnetic behaviour. Cl⁻ → tetrahedral → paramagnetic; CN⁻ → square planar → diamagnetic.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ch" onclick="tog(this)"><span class="ctitle">O₂ paramagnetism and haemoglobin — applications<span class="src">PM Sir</span></span><span class="badge b-def">application</span></div>
+    <div class="cb">
+      <div class="label">O₂ paramagnetism</div>
+      <div class="box">₈O = 1s² 2s² 2p⁴ → paramagnetic (2 unpaired electrons in 2p)
+₇N = 1s² 2s² 2p³ → wait... N₂ is diamagnetic despite N being paramagnetic
+     (because N₂ has bonding MOs that pair all electrons)</div>
+      <div class="label">Fe²⁺ in haemoglobin — full mechanism</div>
+      <div class="box">Before oxygenation (deoxyhaemoglobin):
+Fe²⁺ (d⁶ HS): t₂g⁴ eg² → 4 unpaired electrons → PARAMAGNETIC
+
+Oxygenation process:
+Fe²⁺ gives 1e⁻ to O₂ → Fe²⁺ becomes Fe³⁺
+O₂ + e⁻ → O₂⁻ (superoxide — 1 unpaired electron)
+Fe³⁺ (d⁵ LS in porphyrin): t₂g⁵ eg⁰ → 1 unpaired electron
+
+After oxygenation (oxyhaemoglobin):
+Fe³⁺ (1 unpaired) + O₂⁻ (1 unpaired)
+These two electrons couple ANTIFERROMAGNETICALLY → cancel out
+→ Overall DIAMAGNETIC in oxyhaemoglobin</div>
+      <div class="tip">Deoxygenated haemoglobin = paramagnetic (Fe²⁺, 4 unpaired). Oxygenated haemoglobin = diamagnetic (Fe³⁺ + O₂⁻ coupled). This difference is used in MRI imaging (BOLD contrast).</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ch" onclick="tog(this)"><span class="ctitle">Term symbols — derivation for Co²⁺ (⁴F₉/₂)</span><span class="badge b-calc">derivation</span></div>
+    <div class="cb">
+      <div class="box">General term symbol: ²ˢ⁺¹L_J
+2S+1 = spin multiplicity; L = total orbital AM; J = total AM
+
+Co²⁺ → d⁷ → fill 7 electrons in boxes (ml = −2, −1, 0, +1, +2):
+↑↓ in −2,  ↑↓ in −1,  ↑↓ in 0,  ↑ in +1,  ↑ in +2
+
+L = |sum of ml| = |2(−2) + 2(−1) + 2(0) + 1(1) + 1(2)|
+  = |−4 − 2 + 0 + 1 + 2| = |−3| = 3 → F (L=3 → F)
+
+S = 3 × ½ = 3/2  →  2S+1 = 4
+
+J = L+S = 3 + 3/2 = 9/2  (more than half-filled → J = L+S)
+
+Term symbol: ⁴F₉/₂</div>
+      <div class="label">L → letter mapping</div>
+      <div class="grid2">
+        <div class="mini"><div class="mv">L=0 → S<br>L=1 → P<br>L=2 → D<br>L=3 → F</div></div>
+        <div class="mini"><div class="mv">More than half filled: J = L+S<br>Less than half filled: J = L−S<br>Exactly half filled (L=0): J = S</div></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ==================== REDOX ==================== -->
+<div class="sec" id="redox">
+
+  <div class="card">
+    <div class="ch" onclick="tog(this)"><span class="ctitle">Dichrometry — estimation of Fe in Mohr's salt (lab)</span><span class="badge b-imp">lab experiment</span></div>
+    <div class="cb">
+      <div class="box">Mohr's Salt: (NH₄)₂SO₄ · FeSO₄ · 6H₂O
+K₂Cr₂O₇ = PRIMARY standard (stable, doesn't change strength over time)
+KMnO₄   = SECONDARY standard (changes strength over time — weaker oxidiser adds)
+
+Overall reaction:
+Cr₂O₇²⁻ + 14H⁺ + 6Fe²⁺ → 2Cr³⁺ + 7H₂O + 6Fe³⁺
+                                      (light greenish endpoint)</div>
+      <div class="label">Why H₃PO₄ is added (two reasons)</div>
+      <div class="box">1. Fe³⁺ (yellow) masks BDS endpoint colour
+   H₃PO₄ + Fe³⁺ → [Fe(HPO₄)(H₂O)₅]⁺ (COLOURLESS)
+   → yellow colour removed → endpoint visible
+
+2. Lowers Fe³⁺/Fe²⁺ standard potential below 0.77V
+   → creates sharp potential break at endpoint
+   → BDS (E° ≈ 0.78V) changes colour just above Fe couple</div>
+      <div class="label">BDS indicator mechanism</div>
+      <p class="note">BDS = Barium Diphenylamine Sulphonate. Before endpoint: colourless (reduced form). Once all Fe²⁺ consumed, excess Cr₂O₇²⁻ oxidises BDS → green → blue-violet (endpoint). Ba salt used for better water solubility vs diphenylamine.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ch" onclick="tog(this)"><span class="ctitle">Permanganometry — KMnO₄ reactions and Nernst equation</span><span class="badge b-calc">calculation</span></div>
+    <div class="cb">
+      <div class="box">MnO₄⁻ + 8H⁺ + 5e⁻ → Mn²⁺ + 4H₂O    E° = 1.51 V (self-indicator)
+Fe³⁺ + e⁻ → Fe²⁺                         E° = 0.77 V
+
+Nernst:
+E = E° + (0.059/n) × log([Ox]/[Red])
+E(MnO₄⁻) = 1.51 + (0.059/5) × log([MnO₄⁻][H⁺]⁸/[Mn²⁺])
+
+Comparison:
+E°(MnO₄⁻/Mn²⁺) = 1.51 V  (stronger oxidiser)
+E°(Cr₂O₇²⁻/Cr³⁺) = 1.33 V
+E°(Cl₂/Cl⁻) = 1.36 V
+→ K₂Cr₂O₇ cannot oxidise Cl⁻ to Cl₂ (E° too low)</div>
+      <div class="label">Effect of complex formation on redox potential</div>
+      <div class="box">H₃PO₄ complexes Fe³⁺ → reduces [Fe³⁺] → shifts Nernst equation
+If [Fe³⁺] reduced: E = 0.77 + 0.059 × log([Fe³⁺]/[Fe²⁺]) decreases
+→ standard potential of Fe³⁺/Fe²⁺ couple drops below 0.77V
+→ endpoint sharper</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ch" onclick="tog(this)"><span class="ctitle">Estimation of Mn²⁺ using KMnO₄ — indirect method<span class="src">TKM Sir</span></span><span class="badge b-new">new</span></div>
+    <div class="cb">
+      <p class="note">Mn²⁺ cannot be directly titrated with KMnO₄ (same element). An indirect back-titration method is used.</p>
+      <div class="box">Step 1: Oxidise Mn²⁺ to MnO₄⁻ using NaBiO₃ + HNO₃
+         Mn²⁺ + NaBiO₃ + HNO₃ → MnO₄⁻ + excess products
+
+Step 2: Add measured excess of Mohr's salt (50 mL) = V₂
+         (standard Fe²⁺ solution to reduce back the MnO₄⁻)
+
+Step 3: Titrate excess Mohr's salt (unreacted Fe²⁺) using standard KMnO₄ = V₁
+
+Volume of KMnO₄ equivalent to Mn²⁺ = V₁ − V₂</div>
+      <div class="tip">This is an example of a back-titration: you overshoot the reaction, then titrate back the excess. The KMnO₄ equivalent to Mn²⁺ = difference in volumes.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ch" onclick="tog(this)"><span class="ctitle">Iodometry — estimation of I₂ and Cu²⁺</span><span class="badge b-imp">iodometry</span></div>
+    <div class="cb">
+      <div class="box">Iodimetry:  direct titration with standard I₂ solution (analyte = reducing agent)
+Iodometry: indirect — analyte oxidises I⁻ → I₂; then I₂ titrated with Na₂S₂O₃
+           (analyte = oxidising agent e.g. Cu²⁺, Cr₂O₇²⁻)
+
+I₂ + Na₂S₂O₃:
+S₂O₃²⁻ + I₂ → S₄O₆²⁻ + I⁻   (indicator: starch → blue-black with I₂)
+
+I₂ is partially soluble in water, so add excess KI:
+I₂ + KI → I₃⁻ (highly water soluble)</div>
+      <div class="label">Cu²⁺ estimation by iodometry</div>
+      <div class="box">Cu²⁺ + I⁻ → CuI↓ + I₂   (Cu²⁺ oxidises I⁻)
+Then: I₂ + Na₂S₂O₃ → titrate with starch indicator
+Reaction driven by tiny Ksp of CuI (10⁻¹²) keeping [Cu⁺] very low → forward reaction
+E calculation: E = 0.85 + 0.059 × log([Cu²⁺][I⁻])</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ==================== COMPLEXOMETRIC ==================== -->
+<div class="sec" id="complex">
+
+  <div class="card">
+    <div class="ch" onclick="tog(this)"><span class="ctitle">EDTA structure, pKa values and metal complex</span><span class="badge b-imp">core</span></div>
+    <div class="cb">
+      <p class="note">EDTA (H₄EDTA) has 6 donor sites — 4 carboxylate oxygens + 2 nitrogen atoms. Forms very stable 1:1 complexes with almost all metal ions. Basic medium required because Y⁴⁻ is the reactive form.</p>
+      <div class="box">pKa₁ ≈ 1.99 | pKa₂ ≈ 2.67 | pKa₃ ≈ 6.16 | pKa₄ ≈ 10.26
+H₄EDTA ⇌ H₃EDTA⁻ ⇌ H₂EDTA²⁻ ⇌ HEDTA³⁻ ⇌ Y⁴⁻
+
+M^n+ + H₄EDTA ⇌ [M-EDTA]^(n-4)+ + 4H⁺
+Overall charge on complex = (n−4)+
+Stability constant = product of all stepwise stability constants</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ch" onclick="tog(this)"><span class="ctitle">Three types of EDTA titrations<span class="src">TKM Sir</span></span><span class="badge b-imp">exam structure</span></div>
+    <div class="cb">
+      <div class="label">A. Direct titration</div>
+      <div class="box">Mⁿ⁺ + Ca/Co/Zn²⁺ + EDTA + indicator → titration directly
+Used when: reaction is fast and a suitable indicator exists</div>
+      <div class="label">B. Back titration</div>
+      <div class="box">Step 1: Add measured EXCESS EDTA (e.g. 50 mL) to Mⁿ⁺ + indicator → V₁
+Step 2: Back-titrate excess EDTA with Zn-acetate (primary standard) → V₂
+EDTA consumed by Mⁿ⁺ = (2V₁ − V₂)   [from TKM Sir's formula]
+Used when: direct indicator unavailable or reaction is slow</div>
+      <div class="label">C. Replacement (displacement) titration<span class="src">TKM Sir</span></div>
+      <div class="box">Mⁿ⁺ + Mg-EDTA → [M-EDTA]^(n-4)+ + Mg²⁺
+                        (since M-EDTA > Mg-EDTA in stability)
+Released Mg²⁺ then titrated with EDTA normally.
+Used when: no suitable direct indicator for Mⁿ⁺, but Mg can be indicated easily.
+Stability order must be: M-EDTA > Mg-EDTA</div>
+      <div class="tip">Zn-acetate is the primary standard for back titrations in complexometry — your TKM Sir notes specifically flag this as important.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ch" onclick="tog(this)"><span class="ctitle">Indicators — EBT, Calcon, Fast Sulphon Black F<span class="src">TKM Sir + your notes</span></span><span class="badge b-def">indicators</span></div>
+    <div class="cb">
+      <div class="label">EBT (Eriochrome Black T / Solochrome Black T)</div>
+      <div class="box">Free EBT (HD²⁻) at pH 7–11 → BLUE
+M²⁺ + EBT → M-EBT complex → WINE-RED
+EDTA added → EDTA displaces EBT (M-EDTA > M-EBT)
+→ endpoint: wine-red → clear BLUE
+Used for: total Ca²⁺ + Mg²⁺ (total hardness) at pH 10 with NH₃/NH₄Cl buffer</div>
+      <div class="label">Calcon / Solochrome Dark Blue<span class="src">TKM Sir</span></div>
+      <div class="box">pK₁ = 7.4,  pK₂ = 13.5
+Used in NaOH medium (pH = 12.3)
+At pH 12.3: Mg(OH)₂ precipitates → Mg²⁺ removed from solution
+→ only Ca²⁺ remains to be titrated → Ca-specific
+Used for Ca²⁺ alone</div>
+      <div class="label">Fast Sulphon Black F<span class="src">TKM Sir</span></div>
+      <p class="note">Another metallochromic indicator for complexometric titrations. Your TKM Sir notes show its azo dye structure (similar to EBT). Used as an alternative when EBT gives a faded endpoint.</p>
+      <div class="label">Why Ca²⁺-EBT is unstable (and what to do)</div>
+      <p class="note">Ca-EBT complex is less stable than Mg-EBT. Direct titration of Ca²⁺ with EBT gives no sharp endpoint. Solution: add a small amount of Mg²⁺ to the solution. Mg²⁺ binds EBT (wine-red). Ca²⁺ displaces Mg²⁺ from Mg-EDTA (Ca-EDTA &gt; Mg-EDTA). Released Mg²⁺ binds EBT → gives the wine-red colour → sharp endpoint when EDTA finally displaces EBT from Mg-EBT.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ch" onclick="tog(this)"><span class="ctitle">Water hardness — separation of Ca²⁺ and Mg²⁺<span class="src">TKM Sir</span></span><span class="badge b-calc">method</span></div>
+    <div class="cb">
+      <div class="box">Stability order: Ca-EDTA > Mg-EDTA > Mg-EBT > Ca-EBT
+
+Step 1 (Total hardness — V₁):
+  25 mL hard water + NH₃/NH₄Cl buffer (pH=10) + EBT
+  Titrate with EDTA → V₁ mL
+  V₁ accounts for ALL Ca²⁺ + Mg²⁺
+
+Step 2 (Ca²⁺ only — V₂):
+  Add NaOH to raise pH to 12.3 → Mg(OH)₂ precipitates (removes Mg²⁺)
+  + Calcon indicator
+  Titrate with EDTA → V₂ mL
+  V₂ accounts for Ca²⁺ only
+
+Therefore:
+  Ca²⁺ ∝ V₂
+  Mg²⁺ ∝ (V₁ − V₂)</div>
+      <div class="label">Hardness formula</div>
+      <div class="box">Total hardness = V × f × 40 ppm
+(derived from: 1000 mL of M/100 EDTA ≡ 1g CaCO₃; scaled to 10⁶ parts water from 25 mL sample)
+f = strength factor of M/100 EDTA solution</div>
+      <div class="tip">84 g MgCO₃ ≡ 100 g CaCO₃ (used to convert Mg hardness to CaCO₃ equivalents).</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ==================== GRAVIMETRY ==================== -->
+<div class="sec" id="grav">
+
+  <div class="card">
+    <div class="ch" onclick="tog(this)"><span class="ctitle">Principles of gravimetric analysis</span><span class="badge b-imp">principles</span></div>
+    <div class="cb">
+      <p class="note">Gravimetric analysis is described as the most precise and accurate method. The analyte is converted to a sparingly soluble precipitate, filtered, dried/ignited, and weighed.</p>
+      <div class="label">Classification of volumetric analysis (from TKM Sir)</div>
+      <div class="box">Acid-base titration → volumetric / titrimetric analysis
+Complexometric titration → volumetric analysis
+Redox titration → volumetric analysis
+Gravimetric analysis → mass-based, NOT volumetric</div>
+      <div class="label">Gravimetric factor</div>
+      <div class="box">GF = Molar mass of analyte / Molar mass of precipitate</div>
+      <table class="t">
+        <tr><th>Analyte</th><th>Precipitate</th><th>GF</th></tr>
+        <tr><td>SO₄²⁻</td><td>BaSO₄</td><td>96.06 / 233.39 = 0.4116</td></tr>
+        <tr><td>Cl⁻</td><td>AgCl</td><td>35.45 / 143.32 = 0.2474</td></tr>
+        <tr><td>Mg²⁺</td><td>Mg₂P₂O₇ (PPE)</td><td>2×24.3 / 222.6 = 0.218</td></tr>
+        <tr><td>Ni²⁺</td><td>Ni(DMG)₂</td><td>58.7 / 288.7 = 0.203</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ch" onclick="tog(this)"><span class="ctitle">Common gravimetric estimations — SO₄²⁻ and Cl⁻</span><span class="badge b-calc">worked</span></div>
+    <div class="cb">
+      <div class="box">Sulphate estimation:
+BaCl₂ + SO₄²⁻ → BaSO₄↓ + 2Cl⁻
+Filter, ignite at ~800°C, weigh as BaSO₄
+mass SO₄²⁻ = mass BaSO₄ × GF(0.4116)
+
+Chloride estimation:
+AgNO₃ + Cl⁻ → AgCl↓ + NO₃⁻
+Dry at 120°C (do NOT ignite — AgCl decomposes in light/heat)
+mass Cl⁻ = mass AgCl × GF(0.2474)</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ch" onclick="tog(this)"><span class="ctitle">Ni²⁺ estimation using DMG — full procedure and calculation<span class="src">TKM Sir</span></span><span class="badge b-imp">worked experiment</span></div>
+    <div class="cb">
+      <div class="label">Reaction</div>
+      <div class="box">Ni²⁺ + 2 DMG → Ni(DMG)₂↓  (brick red precipitate)
+M(Ni) = 58.7 g/mol,  M(DMG) = 116.12 g/mol
+M(Ni(DMG)₂) = 58.7 + 2×116.12 = 288.7 g/mol (× g precipitate formed)
+GF = 58.7 / 288.7 = 0.203</div>
+      <div class="label">Why slightly alkaline medium</div>
+      <div class="box">Acidic medium: H⁺ picks up O-H groups → H-bonding disrupted → no precipitate
+Strongly basic: both O-H hydrogens removed → no intramolecular H-bond → no ppt
+Slightly alkaline: DMG forms stable intramolecular H-bonds in chelate ring → brick red Ni-DMG ppt</div>
+      <div class="label">Procedure (from TKM Sir)</div>
+      <div class="box">1. Ni-DMG precipitate formed in solution
+2. Filter through G₄-crucible (sintered glass, not ignition)
+3. W₁ = weight of empty crucible
+4. Wash precipitate, DRY (do NOT ignite — DMG decomposes on heating)
+5. W₂ = weight of crucible + Ni-DMG precipitate
+6. Weight of Ni-DMG = (W₂ − W₁) grams = x grams</div>
+      <div class="label">Calculation (TKM Sir)</div>
+      <div class="box">Amount of Ni in precipitate = (58.7 × x) / 288.7  grams
+Amount of Ni in 1 litre of solution = (58.7 × x / 288.7) × 40
+(×40 factor comes from 25 mL sample → scale to 1000 mL)</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ch" onclick="tog(this)"><span class="ctitle">Thermogravimetric analysis — CuSO₄·5H₂O<span class="src">TKM Sir</span></span><span class="badge b-new">new</span></div>
+    <div class="cb">
+      <p class="note">Thermogravimetric method tracks mass loss as temperature increases. For CuSO₄·5H₂O, water molecules leave in stages at different temperatures.</p>
+      <div class="box">TG curve for CuSO₄·5H₂O (weight vs temperature):
+Step 1: −18 (weight loss) → 2 H₂O molecules escape
+Step 2: −18 (weight loss) → 2 more H₂O molecules escape  
+Step 3: −54 → last H₂O + further dehydration products
+
+Each plateau on the curve = a stable intermediate compound
+The curve has 3 distinct weight-loss steps → confirms 5 water molecules in 3 different environments</div>
+      <div class="tip">The thermogravimetric method tells you not just how many water molecules are present, but in how many distinct environments — some waters are more tightly bound than others.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ch" onclick="tog(this)"><span class="ctitle">Electrogravimetric method<span class="src">TKM Sir</span></span><span class="badge b-new">new</span></div>
+    <div class="cb">
+      <p class="note">Electrogravimetric analysis uses electrolysis to deposit the analyte onto an electrode, which is then weighed. The mass difference of the electrode gives the mass of analyte.</p>
+      <div class="box">Example: Cu²⁺ estimation
+Cu²⁺ + 2e⁻ → Cu°  (deposited on electrode)
+Weigh electrode before and after electrolysis
+Mass of Cu = (final electrode mass − initial electrode mass)</div>
+      <p class="note">This is distinct from the DMG gravimetric method (chemical precipitation). Electrogravimetry deposits the metal directly as an element, so no gravimetric factor is needed — the deposit IS the analyte.</p>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function show(id){
+  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nb').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+}
+function tog(h){
+  h.nextElementSibling.classList.toggle('open');
+}
+</script>
+</body>
+</html>
