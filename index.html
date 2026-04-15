@@ -5,6 +5,33 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Chemistry Master Notes</title>
 <style>
+.btn {
+  /* Layout and Shape */
+  display: inline-block;
+  padding: 12px 24px;
+  border-radius: 8px;
+  text-decoration: none; /* Removes the underline */
+  
+  /* Colors and Typography */
+  background-color: #007bff;
+  color: white;
+  font-family: sans-serif;
+  font-weight: 600;
+  
+  /* Smooth transition for the hover effect */
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+/* Hover Effect: What happens when the mouse is over it */
+.btn:hover {
+  background-color: #0056b3;
+  transform: translateY(-2px); /* Lifts the button slightly */
+}
+
+/* Active Effect: What happens when you click it */
+.btn:active {
+  transform: translateY(0);
+}
 :root {
   /* Light Mode Palette */
   --bg-primary: #f9f9f7;
@@ -156,7 +183,7 @@ ul.li { padding-left: 1.5rem; font-size: 14px; line-height: 2; margin-bottom: 10
   <button class="nb" onclick="show('complex')">Complexometric</button>
   <button class="nb" onclick="show('grav')">Gravimetry</button>
 </div>
-<a href="question.html">Go to the Questions Page</a>
+<a href="about.html" class="btn">Visit About Page</a>
 
 <!-- ==================== COORDINATION ==================== -->
 <div class="sec active" id="coord">
